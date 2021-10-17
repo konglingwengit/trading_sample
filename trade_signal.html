@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>BitCoin Rate Exchanges</title>
+  </head>
+  <body>
+    <h1 class="text-center">Oppertunity Checker For BTC and ETH</h1>
+    <div class="text-center">
+    <button type="button" class="btn btn-primary" id="check">Check Opportunity</button>
+    </div>
+    <div class="jumbotron d-none">
+        <div class="row border border-dark">
+            <div class="col-md-6 border border-dark" id="sell">
+                <h3>Sell BTC</h3>
+            </div>
+            <div class="col-md-6 border border-dark" id="buy">
+                <h3>Buy BTC</h3>
+            </div>
+        </div>
+        <div class="row border border-dark mt-2">
+            <div class="col-md-6 border border-dark" id="sell1">
+                <h3>Sell ETH</h3>
+            </div>
+            <div class="col-md-6 border border-dark" id="buy1">
+                <h3>Buy ETH</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script>
+   
+        jQuery(document).ready(function($){
+          
+        $('#check').on('click',function(){
+        $.ajax({
+                type:'Get',
+                url:'https://api.coinmarketcap.com/data-api/v3/cryptocurrency/market-pairs/latest?slug=bitcoin&start=1&limit=10&category=spot&sort=cmc_rank_advanced',
+                success:function(response)
+                {
+                    var arr=response['data']['marketPairs'];
+                    var max=response['data']['marketPairs'][0]['price'];
+                    var min=response['data']['marketPairs'][0]['price'];
+                    var index_max,index_min;
+                    var max_market_name,max_market_url,min_market_name,min_market_url;
+                    $.each(arr, function(index, value){
+                        if(value['price'] > max){
+                            max=value['price'];
+                            index_max=index;
+                            max_market_name=value['exchangeName'];
+                            max_market_url=value['marketUrl'];
+                        }
+                        if(value['price'] < min){
+                            min=value['price'];
+                            index_min=index;
+                            min_market_name=value['exchangeName'];
+                            min_market_url=value['marketUrl'];
+                        }
+                        
+                    });
+                    $('.jumbotron').removeClass('d-none');
+                    let sell = $("#sell");
+                    let buy = $("#buy");
+                    sell.append('<p>You can sell BTC on this: <a href="'+max_market_url+'">'+max_market_name+'</a> Exchange<p> <h1>Price is:'+max+' USD</h1>');
+                    buy.append('<p>You can Buy BTC on this: <a href="'+min_market_url+'">'+min_market_name+'</a> Exchange<p> <h1>Price is:'+min+' USD</h1>');
+                   
+                        
+                }
+            });
+            $.ajax({
+                type:'Get',
+                url:'https://api.coinmarketcap.com/data-api/v3/cryptocurrency/market-pairs/latest?slug=ethereum&start=1&limit=10&category=spot&sort=cmc_rank_advanced',
+                success:function(response)
+                {
+                    var arr=response['data']['marketPairs'];
+                    console.log(arr);
+                    var max1=response['data']['marketPairs'][0]['price'];
+                    var min1=response['data']['marketPairs'][0]['price'];
+                    var index_max1,index_min1;
+                    var max_market_name1,max_market_url1,min_market_name1,min_market_url1;
+                    $.each(arr, function(index, value){
+                        if(value['price'] > max1){
+                            max1=value['price'];
+                            index_max1=index;
+                            max_market_name1=value['exchangeName'];
+                            max_market_url1=value['marketUrl'];
+                        }
+                        if(value['price'] < min1){
+                            min=value['price'];
+                            index_min1=index;
+                            min_market_name1=value['exchangeName'];
+                            min_market_url1=value['marketUrl'];
+                        }
+                        
+                    });
+                    $('.jumbotron').removeClass('d-none');
+                    let sell1 = $("#sell1");
+                    let buy1 = $("#buy1");
+                    sell1.append('<p>You can sell ETH on this: <a href="'+max_market_url1+'">'+max_market_name1+'</a> Exchange<p> <h1>Price is:'+max1+' USD</h1>');
+                    buy1.append('<p>You can sell ETH on this: <a href="'+min_market_url1+'">'+min_market_name1+'</a> Exchange<p> <h1>Price is:'+min1+' USD</h1>');
+                    
+
+                        
+                }
+            });
+        });
+                    
+    });
+  
+                </script>
+</body>
+</html>
